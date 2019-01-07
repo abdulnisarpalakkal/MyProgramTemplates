@@ -1,0 +1,77 @@
+<div class="row"  >
+          <div class="col col-xl-12 col-lg-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Table Fields
+                </div>
+              <div class="card-body table-responsive " >
+                  <div class="row">
+                      <div class="col-xl-1 text-xs-center">
+                            PK
+                      </div>
+                      <div class="col-xl-3 text-xs-center">
+                          
+                                  Field Name
+                      </div>
+                      <div class="col-xl-3 text-xs-center">
+                                  Data Type
+                      </div>
+                      <div class="col-xl-4 text-xs-center">
+                                  Description
+                      </div>
+                      <div class="col-xl-1 text-xs-center">
+                            
+                     </div>
+                  </div>
+                  <hr />
+                  <!-- {{virtualTable|json}} -->
+                  <!-- {{virtualTableFieldsList.length}} -->
+                  <!-- {{virtualTable.virtualTableFieldsList|json}}-->
+                  <!-- {{virtualTableConstraintList|json}}  -->
+                  <!-- {{dataTypes|json}} -->
+                  <!-- [ngClass]="(virtualTableField.deleted)?' ng-invalid row':'row'" -->
+                  <!-- [class.ng-delete-req]="virtualTableField.deleted" -->
+                  <!-- {{pkConstraint|json}} -->
+                  <div class="row" [class.ng-delete-req]="virtualTableField.deleted"  *ngFor="let virtualTableField of virtualTableFieldsList; let i = index" >
+                    
+                    <div class="col-xl-1 text-xs-center " >
+                     
+                        <div class="form-check">
+                          <input type="radio" class="form-check-input" id="pk"  [checked]="pkConstraint.virtualTableField.fieldName!=null && pkConstraint.virtualTableField.fieldName==virtualTableField.fieldName  "   name="pk{{i}}"  (change)="handleChange($event,virtualTableField)" >
+                          
+                        </div>
+                    </div>  
+                    <!-- [checked]="pkConstraint.virtualTableField.fieldName==virtualTableField.fieldName" -->
+                    <div class="col-xl-3 text-xs-center " >
+                            <div class="form-group has-warning" >
+                              <input type="text" class="form-control input-underline input-lg "  [(ngModel)]="virtualTableField.fieldName" id="fieldName"  name="fieldName{{i}}">
+                            </div>
+                      </div>
+                      <div class="col-xl-3 text-xs-center">
+                            <div class="form-group">
+                                <select [(ngModel)]="virtualTableField.fieldDataType" id="fieldDataType" name="fieldDataType{{i}}" class="form-control input-underline input-lg " >
+                                        <option value="" disabled selected>>select a datatype</option>
+                                        <option *ngFor="let datatype of dataTypes" >{{datatype}}</option>
+                                </select>
+                            </div>
+                      </div>
+                      <div class="col-xl-4 text-xs-center">
+                          <div class="form-group">
+                              <input type="text" class="form-control input-underline input-lg " [(ngModel)]="virtualTableField.fieldDesc" id="fieldDesc" name="fieldDesc{{i}}"  >
+                            </div>
+                      </div>
+                      <div class="col-xl-1 text-xs-center">
+                            <a [routerLink]="" (click)="toggleRemoveField(virtualTableField)">
+                              <i  class="fa fa-fw " [class.fa-remove]="!virtualTableField.deleted"  [class.fa-undo]="virtualTableField.deleted"></i>
+                            </a>
+                      </div>
+                      
+                      
+                  </div>
+                  <button type="button" class="btn rounded-btn" (click)="addField()" >+</button>
+               
+            </div>
+          </div>
+        </div>
+      
+      </div>
