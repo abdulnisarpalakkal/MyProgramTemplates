@@ -3,15 +3,14 @@ package com.focowell.service;
 import java.util.List;
 
 import com.focowell.config.error.AlreadyExistsException;
-import com.focowell.model.ProcessData;
+import com.focowell.model.Category;
 
-
-public interface ProcessService {
-	    List<ProcessData> findAll();
+public interface CategoryService {
+	    List<Category> findAll();
 	    void delete(long id);
-	    ProcessData findOne(String categoryName);
+	    Category findOne(String categoryName);
 
-	    ProcessData findById(Long id);
-	    ProcessData save(ProcessData category) throws AlreadyExistsException;
-	    ProcessData update(ProcessData category) throws AlreadyExistsException;
+	    Category findById(Long id);
+	    Category save(Category category) throws AlreadyExistsException;
+	    Category update(Category category);
 }
