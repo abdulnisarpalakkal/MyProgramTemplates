@@ -7,81 +7,66 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.focowell.config.error.AlreadyExistsException;
-import com.focowell.dao.ProcessDao;
-import com.focowell.dao.ProcessDao;
-import com.focowell.model.ProcessData;
+import com.focowell.dao.CategoryDao;
+import com.focowell.dao.UserDao;
+import com.focowell.model.Category;
+import com.focowell.model.User;
+import com.focowell.service.CategoryService;
 
-import com.focowell.service.ProcessService;
-import com.focowell.service.ProcessService;
-
-@Service(value = "processService")
-public class ProcessServiceImpl implements ProcessService {
+@Service(value = "categoryService")
+public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
-	private ProcessDao processDao;
+	private CategoryDao categoryDao;
 	
 	@Override
-	public List<ProcessData> findAll() {
-		List<ProcessData> list = new ArrayList<>();
-		processDao.findAllByJPQL().iterator().forEachRemaining(list::add);
+	public List<Category> findAll() {
+		List<Category> list = new ArrayList<>();
+		categoryDao.findAll().iterator().forEachRemaining(list::add);
 		return list;
 	}
 
 	@Override
 	public void delete(long id) {
-		processDao.deleteById(id);
+		categoryDao.deleteById(id);
 		
 	}
 
 	@Override
-	public ProcessData findOne(String processName) {
-		return processDao.findByProcessName(processName).get(0);
+	public Category findOne(String categoryName) {
+		return categoryDao.findByCategoryName(categoryName).get(0);
 	}
 
 	@Override
-	public ProcessData findById(Long id) {
-		return processDao.findById(id).get();
+	public Category findById(Long id) {
+		return categoryDao.findById(id).get();
 	}
 
 	@Override
-	public ProcessData save(ProcessData process) throws AlreadyExistsException {
-		if(processExist(process.getProcessName(),0))
+	public Category save(Category category) throws AlreadyExistsException {
+		if(categoryExist(category.getCategoryName()))
 		{
 			throw new AlreadyExistsException(
-		              "There is an process with the same name "
-		              +  process.getProcessName() );
+		              "There is an Category with the same name "
+		              +  category.getCategoryName() );
 		}
-		return processDao.save(process);
+		return categoryDao.save(category);
 	}
 
 	@Override
-	public ProcessData update(ProcessData process) throws AlreadyExistsException {
-		ProcessData updateProcess =processDao.findById(process.getId()).get();
-		if(processExist(process.getProcessName(),updateProcess.getId()))
-		{
-			throw new AlreadyExistsException(
-		              "There is an process with the same name "
-		              +  process.getProcessName() );
-		}		
-		updateProcess.setProcessName(process.getProcessName());
-		updateProcess.setProcessDesc(process.getProcessDesc());
-		updateProcess.setCategory(process.getCategory());
+	public Category update(Category category) {
+		Category updateCategory =categoryDao.findById(category.getId()).get();
+				
+		updateCategory.setCategoryName(category.getCategoryName());
+		updateCategory.setCategoryDesc(category.getCategoryDesc());
 					
-        return processDao.save(updateProcess);
+        return categoryDao.save(updateCategory);
 	}
 	
-	private boolean processExist(String processName,long id) {
-        List<ProcessData> processes = processDao.findByProcessName(processName);
-        if (processes != null && processes.size()!=0 ) {
-        	if(id==0)
-        		return true;
-        	for(ProcessData process : processes)
-        	{
-        		if(id!=process.getId())
-        			return true;
-        	}
-        	
-            
+	private boolean categoryExist(String categoryName) {
+        List<Category> categories = categoryDao.findByCategoryName(categoryName);
+        if (categories != null && categories.size()!=0 ) {
+            return true;
         }
         return false;
     }
