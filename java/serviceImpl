@@ -1,74 +1,111 @@
-package com.focowell.service.impl;
+package com.focowell.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
-import com.focowell.config.error.AlreadyExistsException;
-import com.focowell.dao.CategoryDao;
-import com.focowell.dao.UserDao;
-import com.focowell.model.Category;
-import com.focowell.model.User;
-import com.focowell.service.CategoryService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@Service(value = "categoryService")
-public class CategoryServiceImpl implements CategoryService {
-
-	@Autowired
-	private CategoryDao categoryDao;
+@Entity  
+@Table(name="PROCESS_CATEGORY")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Category implements Serializable {
 	
-	@Override
-	public List<Category> findAll() {
-		List<Category> list = new ArrayList<>();
-		categoryDao.findAll().iterator().forEachRemaining(list::add);
-		return list;
+
+	@Id  
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "cat_Sequence")
+    @SequenceGenerator(name = "cat_Sequence", sequenceName = "DB_CATEGORY_SEQ")
+    private long id;
+	
+	@NotEmpty
+	@Column(name="CATEGORY_NAME", nullable=false)
+    private String categoryName;
+	
+	
+	@Column(name="CATEGORY_DESC")
+    private String categoryDesc;
+	
+	@ManyToOne(fetch=FetchType.LAZY)    
+	private User createdUser;
+	
+	
+	@Column(name="CREATED_DATE", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	private Date createdDate=new Date();
+
+	@JsonIgnore
+    @OneToMany( mappedBy="category")
+    public Set<ProcessData> processes;
+	
+	public long getId() {
+		return id;
 	}
 
-	@Override
-	public void delete(long id) {
-		categoryDao.deleteById(id);
-		
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
-	@Override
-	public Category findOne(String categoryName) {
-		return categoryDao.findByCategoryName(categoryName).get(0);
+
+	public String getCategoryName() {
+		return categoryName;
 	}
 
-	@Override
-	public Category findById(Long id) {
-		return categoryDao.findById(id).get();
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
-	@Override
-	public Category save(Category category) throws AlreadyExistsException {
-		if(categoryExist(category.getCategoryName()))
-		{
-			throw new AlreadyExistsException(
-		              "There is an Category with the same name "
-		              +  category.getCategoryName() );
-		}
-		return categoryDao.save(category);
+
+	public String getCategoryDesc() {
+		return categoryDesc;
 	}
 
-	@Override
-	public Category update(Category category) {
-		Category updateCategory =categoryDao.findById(category.getId()).get();
-				
-		updateCategory.setCategoryName(category.getCategoryName());
-		updateCategory.setCategoryDesc(category.getCategoryDesc());
-					
-        return categoryDao.save(updateCategory);
+
+	public void setCategoryDesc(String categoryDesc) {
+		this.categoryDesc = categoryDesc;
+	}
+
+
+	public User getCreatedUser() {
+		return createdUser;
+	}
+
+
+	public void setCreatedUser(User createdUser) {
+		this.createdUser = createdUser;
+	}
+
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 	
-	private boolean categoryExist(String categoryName) {
-        List<Category> categories = categoryDao.findByCategoryName(categoryName);
-        if (categories != null && categories.size()!=0 ) {
-            return true;
-        }
-        return false;
-    }
+	public Set<ProcessData> getProcesses() {
+		return processes;
+	}
+
+
+	public void setProcesses(Set<ProcessData> processes) {
+		this.processes = processes;
+	}
 
 }
