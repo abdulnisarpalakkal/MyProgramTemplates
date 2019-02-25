@@ -1,3 +1,5 @@
+add MsgViewModule to current module
+
 component.ts:
 
 implement MsgInterface
