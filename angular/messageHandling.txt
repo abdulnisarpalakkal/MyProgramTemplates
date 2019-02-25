@@ -30,5 +30,5 @@ component.html:
 [msgOb]="msgOb" pass object as input
 
 modal.ts:
-
+@Input() msgOb:UserMsg=new UserMsg();
 
