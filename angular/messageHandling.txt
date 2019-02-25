@@ -2,9 +2,11 @@ component.ts:
 
 implement MsgInterface
 
+declare:
 msgOb:UserMsg=new UserMsg();
+private handler:Handler
 
-
+add:
 successHandler(msg)
 {
    
@@ -18,8 +20,15 @@ errorHandler(error)
     
 }
 
+success handler call:
+this.successHandler("Category "+category.categoryName+" deleted successfully");
+
 component.html:
 
 <app-msg-view [msgOb]="msgOb"></app-msg-view> 
 
 [msgOb]="msgOb" pass object as input
+
+modal.ts:
+
+
