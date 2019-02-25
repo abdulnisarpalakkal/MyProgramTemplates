@@ -1,0 +1,25 @@
+component.ts:
+
+implement MsgInterface
+
+msgOb:UserMsg=new UserMsg();
+
+
+successHandler(msg)
+{
+   
+    this.msgOb.msg=msg;
+    this.msgOb=this.handler.getSuccessMsgObject(this.msgOb);
+}
+errorHandler(error)
+{
+    this.msgOb.msg=error;
+    this.msgOb=this.handler.getErrorMsgObject( this.msgOb);
+    
+}
+
+component.html:
+
+<app-msg-view [msgOb]="msgOb"></app-msg-view> 
+
+[msgOb]="msgOb" pass object as input
